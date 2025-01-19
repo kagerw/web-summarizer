@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>YouTube Summarizer</title>
+  <style>
+    body {
+      width: 300px;
+      padding: 15px;
+      font-family: Arial, sans-serif;
+    }
+    .container {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    h1 {
+      color: #333;
+      font-size: 18px;
+      margin: 0 0 15px 0;
+      text-align: center;
+    }
+    #status {
+      color: #666;
+      font-size: 14px;
+      margin-bottom: 10px;
+      text-align: center;
+    }
+    button {
+      background-color: #ff0000;
+      color: white;
+      border: none;
+      padding: 8px 16px;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 14px;
+    }
+    button:disabled {
+      background-color: #ccc;
+      cursor: not-allowed;
+    }
+    #summary {
+      background-color: #f5f5f5;
+      padding: 10px;
+      border-radius: 4px;
+      font-size: 14px;
+      line-height: 1.4;
+      white-space: pre-wrap;
+      display: none;
+    }
+    #error {
+      color: #ff0000;
+      font-size: 14px;
+      display: none;
+      text-align: center;
+    }
+    .loading {
+      display: none;
+      text-align: center;
+      margin: 10px 0;
+    }
+    .loading::after {
+      content: '...';
+      animation: dots 1s steps(5, end) infinite;
+    }
+    @keyframes dots {
+      0%, 20% { content: '.'; }
+      40% { content: '..'; }
+      60%, 100% { content: '...'; }
+    }
+    .settings {
+      margin-top: 15px;
+      padding-top: 15px;
+      border-top: 1px solid #ddd;
+    }
+    .api-key-input {
+      width: 100%;
+      padding: 8px;
+      margin: 5px 0;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      box-sizing: border-box;
+    }
+    .save-button {
+      background-color: #4CAF50;
+    }
+    .hidden {
+      display: none;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>YouTube Summarizer</h1>
+    <div id="api-key-section" class="hidden">
+      <p>OpenAI APIキーを入力してください：</p>
+      <input type="password" id="api-key-input" class="api-key-input" placeholder="sk-..." />
+      <button id="save-api-key" class="save-button">保存</button>
+    </div>
+    <div id="main-section">
+      <div id="status">YouTubeページを開いてください</div>
+      <button id="summarize" disabled>要約する</button>
+      <div id="loading" class="loading">要約を生成中</div>
+      <div id="summary"></div>
+      <div id="error"></div>
+      <div class="settings">
+        <button id="show-settings" class="save-button">APIキーを変更</button>
+      </div>
+    </div>
+  </div>
+  <script src="popup.js"></script>
+</body>
+</html>
