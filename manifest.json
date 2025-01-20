@@ -1,12 +1,13 @@
 {
   "manifest_version": 3,
-  "name": "YouTube Summarizer",
+  "name": "Web Content Summarizer",
   "version": "1.0",
-  "description": "YouTubeの動画内容を要約する拡張機能",
+  "description": "ウェブページの内容を要約・分析する拡張機能",
   "permissions": [
     "activeTab",
     "scripting",
-    "storage"
+    "storage",
+    "tabs"
   ],
   "host_permissions": [
     "https://api.openai.com/*"
@@ -26,7 +27,7 @@
   },
   "content_scripts": [
     {
-      "matches": ["https://www.youtube.com/*"],
+      "matches": ["<all_urls>"],
       "js": ["content.js"]
     }
   ],

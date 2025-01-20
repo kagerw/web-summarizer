@@ -33,17 +33,20 @@ function showMainSection() {
   mainSection.classList.remove('hidden');
 }
 
-// 現在のタブがYouTubeかどうかを確認
-async function checkYouTubeTab() {
+// 現在のタブが有効なウェブページかどうかを確認
+async function checkValidTab() {
   const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
-  const isYouTube = tab.url?.includes('youtube.com/watch');
+  const isValidUrl = tab.url && (
+    tab.url.startsWith('http://') || 
+    tab.url.startsWith('https://')
+  );
   
-  summarizeButton.disabled = !isYouTube;
-  statusElement.textContent = isYouTube 
+  summarizeButton.disabled = !isValidUrl;
+  statusElement.textContent = isValidUrl 
     ? '要約する準備ができました'
-    : 'YouTubeの動画ページを開いてください';
+    : 'ウェブページを開いてください';
   
-  return { isYouTube, tab };
+  return { isValidUrl, tab };
 }
 
 // エラーを表示
@@ -81,13 +84,13 @@ async function summarize(tab) {
 
     showLoading();
 
-    // content.jsから動画情報を取得
-    const videoInfo = await chrome.tabs.sendMessage(tab.id, { action: "getVideoInfo" });
+    // content.jsからページ情報を取得
+    const pageContent = await chrome.tabs.sendMessage(tab.id, { action: "getPageContent" });
     
     // background.jsで要約を生成
     const response = await chrome.runtime.sendMessage({
       action: "summarize",
-      videoInfo,
+      pageContent,
       apiKey
     });
 
@@ -112,8 +115,8 @@ document.addEventListener('DOMContentLoaded', async () => {
       return;
     }
 
-    const { isYouTube, tab } = await checkYouTubeTab();
-    if (isYouTube) {
+    const { isValidUrl, tab } = await checkValidTab();
+    if (isValidUrl) {
       summarizeButton.addEventListener('click', () => summarize(tab));
     }
   } catch (error) {
@@ -136,8 +139,8 @@ saveApiKeyButton.addEventListener('click', async () => {
 
   await saveApiKey(apiKey);
   showMainSection();
-  const { isYouTube, tab } = await checkYouTubeTab();
-  if (isYouTube) {
+  const { isValidUrl, tab } = await checkValidTab();
+  if (isValidUrl) {
     summarizeButton.addEventListener('click', () => summarize(tab));
   }
 });

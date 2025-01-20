@@ -1,5 +1,5 @@
-// OpenAI APIを使用して要約を生成する関数
-async function generateSummary(videoInfo, apiKey) {
+// OpenAI APIを使用してコンテンツを分析する関数
+async function analyzeContent(pageContent, apiKey) {
     try {
         const response = await fetch('https://api.openai.com/v1/chat/completions', {
             method: 'POST',
@@ -12,14 +12,25 @@ async function generateSummary(videoInfo, apiKey) {
                 messages: [
                     {
                         role: "system",
-                        content: "あなたはYouTube動画の内容を簡潔に要約するアシスタントです。"
+                        content: "あなたはウェブページの内容を分析し、重要なポイントを抽出して整理するアシスタントです。専門的な内容も理解し、わかりやすく説明することができます。"
                     },
                     {
                         role: "user",
-                        content: `以下の動画の内容を3つのポイントで要約してください：\n\nタイトル：${videoInfo.title}\n\n説明：${videoInfo.description}`
+                        content: `以下のウェブページの内容を分析し、主要なポイントを3-5個にまとめ、簡潔に説明してください。
+                        
+タイトル：${pageContent.title}
+
+メタ情報：
+${pageContent.meta.description}
+${pageContent.meta.keywords}
+
+本文：
+${pageContent.content}
+
+URL: ${pageContent.url}`
                     }
                 ],
-                max_tokens: 500
+                max_tokens: 800
             })
         });
 
@@ -31,7 +42,7 @@ async function generateSummary(videoInfo, apiKey) {
         const data = await response.json();
         return data.choices[0].message.content;
     } catch (error) {
-        console.error('Error generating summary:', error);
+        console.error('Error analyzing content:', error);
         throw error;
     }
 }
@@ -39,7 +50,7 @@ async function generateSummary(videoInfo, apiKey) {
 // メッセージリスナーを設定
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
     if (request.action === "summarize") {
-        generateSummary(request.videoInfo, request.apiKey)
+        analyzeContent(request.pageContent, request.apiKey)
             .then(summary => {
                 sendResponse({ success: true, summary });
             })
