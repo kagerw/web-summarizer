@@ -12,13 +12,13 @@ const showSettingsButton = document.getElementById('show-settings');
 
 // APIキーの保存
 async function saveApiKey(apiKey) {
-  await chrome.storage.local.set({ 'openai_api_key': apiKey });
+  await chrome.storage.local.set({ 'gemini_api_key': apiKey });
 }
 
 // APIキーの取得
 async function getApiKey() {
-  const result = await chrome.storage.local.get(['openai_api_key']);
-  return result.openai_api_key;
+  const result = await chrome.storage.local.get(['gemini_api_key']);
+  return result.gemini_api_key;
 }
 
 // APIキー設定画面の表示
@@ -132,8 +132,8 @@ saveApiKeyButton.addEventListener('click', async () => {
     return;
   }
 
-  if (!apiKey.startsWith('sk-')) {
-    showError('無効なAPIキーです');
+  if (!apiKey.startsWith('AIza')) {
+    showError('無効なAPIキーです。Google Cloud APIキーは"AIza"で始まります。');
     return;
   }
 

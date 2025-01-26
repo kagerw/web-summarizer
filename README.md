@@ -1,12 +1,12 @@
 # Web Content Summarizer Chrome Extension
 
-ウェブページの内容を要約・分析するChrome拡張機能です。OpenAI GPT-4-ominiを活用して、ウェブページやPDFファイルの主要なポイントを3-5個にまとめて表示します。
+ウェブページの内容を要約・分析するChrome拡張機能です。Google Gemini Proを活用して、ウェブページやPDFファイルの主要なポイントを3-5個にまとめて表示します。
 
 ## 主な機能
 
 - ウェブページの内容を自動的に要約
 - PDFファイルのサポート
-- OpenAI GPT-4-ominiによる高度な分析
+- Google Gemini Proによる高度な分析
 - シンプルで使いやすいインターフェース
 - APIキー管理機能
 
@@ -20,9 +20,10 @@
 ## 使用方法
 
 1. 拡張機能をインストール後、Chrome右上の拡張機能アイコンをクリック
-2. 初回使用時にOpenAI APIキーを設定
-   - APIキーは[OpenAIのウェブサイト](https://platform.openai.com/)で取得可能
-   - 取得したAPIキーを拡張機能の設定画面に入力
+2. 初回使用時にGoogle Cloud APIキーを設定
+   - [Google Cloud Console](https://console.cloud.google.com/)でプロジェクトを作成
+   - Gemini APIを有効化
+   - APIキーを作成して拡張機能の設定画面に入力
 3. 要約したいウェブページやPDFファイルを開く
 4. 拡張機能のポップアップで「要約する」ボタンをクリック
 5. 数秒後に要約が表示されます
@@ -35,7 +36,7 @@
   - メタデータ（タイトル、説明、キーワード）も取得
 
 - **要約生成**
-  - OpenAI GPT-4-omini APIを使用
+  - Google Gemini Pro APIを使用
   - 最大800トークンの要約を生成
   - 日本語でわかりやすく整理された要約を提供
 
@@ -50,7 +51,7 @@
 - `scripting`: ページ内でスクリプトを実行
 - `storage`: APIキーの保存
 - `tabs`: タブ情報の取得
-- `webRequest`: OpenAI APIとの通信
+- `webRequest`: Google Cloud APIとの通信
 
 ## 開発者向け情報
 
@@ -59,7 +60,7 @@
 - `manifest.json`: 拡張機能の設定ファイル
 - `popup.html/js`: ユーザーインターフェース
 - `content.js`: ページコンテンツの抽出
-- `background.js`: OpenAI APIとの通信
+- `background.js`: Google Gemini APIとの通信
 - `pdf.js/worker.js`: PDF処理ライブラリ
 - `pdf_viewer.css`: PDFビューアーのスタイル
 
@@ -82,7 +83,7 @@ npm run build
 
 ## 制限事項
 
-- OpenAI APIキーが必要
+- Google Cloud APIキーが必要
 - テキストは最大5000文字まで処理可能
 - PDFファイルは一般的なテキスト形式のみサポート
 - ウェブページによってはコンテンツ抽出の精度が異なる場合があります

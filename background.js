@@ -1,23 +1,18 @@
-// OpenAI APIを使用してコンテンツを分析する関数
+// Google Gemini APIを使用してコンテンツを分析する関数
 async function analyzeContent(pageContent, apiKey) {
     try {
-        const response = await fetch('https://api.openai.com/v1/chat/completions', {
+        const response = await fetch(`https://generativelanguage.googleapis.com/v1/models/gemini-pro:generateContent?key=${apiKey}`, {
             method: 'POST',
             headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${apiKey}`
+                'Content-Type': 'application/json'
             },
             body: JSON.stringify({
-                model: "gpt-4o-mini-2024-07-18",
-                messages: [
-                    {
-                        role: "system",
-                        content: "あなたはウェブページの内容を分析し、重要なポイントを抽出して整理するアシスタントです。専門的な内容も理解し、わかりやすく説明することができます。"
-                    },
-                    {
-                        role: "user",
-                        content: `以下のウェブページの内容を分析し、主要なポイントを3-5個にまとめ、簡潔に説明してください。
-                        
+                contents: [{
+                    parts: [{
+                        text: `あなたはウェブページの内容を分析し、重要なポイントを抽出して整理するアシスタントです。専門的な内容も理解し、わかりやすく説明することができます。
+
+以下のウェブページの内容を分析し、主要なポイントを3-5個にまとめ、簡潔に説明してください。
+
 タイトル：${pageContent.title}
 
 メタ情報：
@@ -28,9 +23,12 @@ ${pageContent.meta.keywords}
 ${pageContent.content}
 
 URL: ${pageContent.url}`
-                    }
-                ],
-                max_tokens: 800
+                    }]
+                }],
+                generationConfig: {
+                    temperature: 0.7,
+                    maxOutputTokens: 800,
+                }
             })
         });
 
@@ -40,7 +38,7 @@ URL: ${pageContent.url}`
         }
 
         const data = await response.json();
-        return data.choices[0].message.content;
+        return data.candidates[0].content.parts[0].text;
     } catch (error) {
         console.error('Error analyzing content:', error);
         throw error;
